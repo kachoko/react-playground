@@ -17,3 +17,10 @@ export const getOsType = () => {
             return UA;
     }
 };
+
+export const isPwaMode = () => {
+    if (window.matchMedia("(display-mode: standalone)").matches) {
+        return true;
+    }
+    return false;
+};
