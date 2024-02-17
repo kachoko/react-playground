@@ -1,18 +1,20 @@
+import { Link } from "react-router-dom";
 import "./App.css";
-// import { Pwa } from "./pages/Pwa.page";
-import { Reducer } from "./pages/reducer/Reducer.page";
 
 export const App = () => {
     return (
-        <div>
+        <main>
             <p>Hello React Playground!!</p>
-            {/* TODO: ルーティング欲しい */}
-
-            {/* 1. PWA検証 */}
-            {/* <Pwa /> */}
-
-            {/* 2. useReducerの検証 */}
-            <Reducer />
-        </div>
+            <section>
+                <ul>
+                    <li>
+                        <Link to={"/pwa"}>PWA検証</Link>
+                    </li>
+                    <li>
+                        <Link to={"/reducer"}>useReducer検証</Link>
+                    </li>
+                </ul>
+            </section>
+        </main>
     );
 };
