@@ -2,7 +2,7 @@
  * 参考: https://qiita.com/seira/items/2fbad56e84bda885c84c
  */
 
-import { useContext, useReducer } from "react";
+import { useContext, useReducer, useRef } from "react";
 import { Context } from "../../context/Context";
 
 // counterの初期値を0に設定
@@ -66,21 +66,19 @@ export const Reducer = () => {
         reducerPokemon,
         intialPokemon
     );
-
-    const { state, dispatch } = useContext(Context);
-    console.log("user: ", state?.user);
-
+    const userName = useRef<HTMLInputElement | null>(null);
+    const { dispatch } = useContext(Context);
     const changeUserInfo = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         dispatchUser({ [name]: value });
     };
 
     return (
-        <>
-            <p>useReducerを試す</p>
+        <main>
+            <h1>useReducerの検証</h1>
             <section>
-                <h1>シンプルな数値の場合</h1>
-                <h2>カウント：{count}</h2>
+                <h2>シンプルな数値の場合</h2>
+                <p>カウント：{count}</p>
                 <div>
                     <button onClick={() => dispatchCount("increment")}>
                         +1
@@ -94,7 +92,7 @@ export const Reducer = () => {
                 </div>
             </section>
             <section>
-                <h1>シンプルなオブジェクトの場合</h1>
+                <h2>シンプルなオブジェクトの場合</h2>
                 <p>お名前: {user.name}</p>
                 <p>メールアドレス: {user.mail}</p>
                 <input
@@ -111,7 +109,7 @@ export const Reducer = () => {
                 />
             </section>
             <section>
-                <h1>複雑なオブジェクトの場合</h1>
+                <h2>複雑なオブジェクトの場合</h2>
                 <p>手持ち: {pokemon}</p>
                 <button
                     onClick={() => {
@@ -134,20 +132,25 @@ export const Reducer = () => {
                 </button>
             </section>
             <section>
-                <p>テスト</p>
+                <h2>Contextを用いたuseReducer</h2>
+                <input type="text" ref={userName} />
                 <button
                     onClick={() => {
-                        console.log("名前をセットします");
+                        if (!userName.current) {
+                            return;
+                        }
+                        const { value } = userName.current;
+                        console.log("set name is: ", value);
                         const payload = {
                             id: "001",
-                            name: "サンプル 太郎",
+                            name: value,
                         };
                         dispatch({ type: "SET_USER", payload: payload });
                     }}
                 >
-                    名前をセットしてみる
+                    SET to context
                 </button>
             </section>
-        </>
+        </main>
     );
 };

@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { ReactNode, createContext, useReducer } from "react";
 
 // Contextの型定義
 // 新しくkeyを追加するときなどはこちらにも定義する
@@ -23,12 +23,15 @@ const initialState: ContextState = {
     },
 };
 
+// contextを更新するためのactionの方を定義する
 type Action = {
-    type: string;
-    payload: any;
+    type: string; // actionの名称
+    payload: any; // 引数的なものだが
 };
 
 const reducerFunc = (currentState: ContextState, action: Action) => {
+    // ここにstoreの更新処理を書く
+    // ただし、ここでは受け取った値をそのままreturnするだけにすること（この関数を呼ぶ前にデータの形は作ってしまうこと）
     switch (action.type) {
         case "SET_USER":
             return { ...currentState, user: action.payload };
@@ -41,25 +44,28 @@ const reducerFunc = (currentState: ContextState, action: Action) => {
 };
 
 type ContextProviderState = {
-    state: ContextState;
-    // dispatchの引数オブジェクトの型を、React.Dispatch<XXXXX> に定義する。
+    store: ContextState;
     dispatch: React.Dispatch<Action>;
 };
 
 export const Context = createContext({} as ContextProviderState);
-
-export const ContextProvider = (props: any): JSX.Element => {
-    // useReducerで生成した「参照用state」と「更新用dispatch」を、contextに渡す。
-    const [state, dispatch] = useReducer(reducerFunc, initialState);
+export const ContextProvider = ({
+    children,
+}: {
+    children: ReactNode;
+}): JSX.Element => {
+    // useReducerで生成した「参照用のstore」と「更新用のdispatch」を、contextに渡す
+    const [store, dispatch] = useReducer(reducerFunc, initialState);
 
     return (
         <Context.Provider
             value={{
-                state,
+                // ここにuserReducerで生成したものを渡す
+                store,
                 dispatch,
             }}
         >
-            {props.children}
+            {children}
         </Context.Provider>
     );
 };
